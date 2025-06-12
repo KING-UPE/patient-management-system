@@ -41,21 +41,21 @@ git clone https://github.com/KING-UPE/patient-management-system.git
 cd patient-management-system
 ```
 
-###3️⃣ Step 3: Install Dependencies
+### 3️⃣ Step 3: Install Dependencies
 ```bash
 npm install
 ```
 
-###4️⃣ Step 4: Environment Setup
+### 4️⃣ Step 4: Environment Setup
 Create a .env file in the root directory with the following content:
 ```
 MONGODB_URI=your_mongodb_connection_string
 PORT=3000
 ```
--📝 Replace your_mongodb_connection_string with your actual MongoDB Atlas URI.
+📝 Replace your_mongodb_connection_string with your actual MongoDB Atlas URI.
 
-###5️⃣ Step 5: Start the App
+### 5️⃣ Step 5: Start the App
 ```bash
 npm start
 ```
--👉 The app will run at: http://localhost:3000
+👉 The app will run at: http://localhost:3000
