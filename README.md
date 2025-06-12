@@ -2,35 +2,39 @@
 
 A web-based system for managing patient records in a teaching hospital.
 
-## Features
+## 🌐 Live Demo
+[Access the live application](https://patient-management-system-production.up.railway.app/)
 
-- Add new patients
-- View and search existing patients
-- Update patient information
-- Delete patient records
-- Filter patients by various criteria
-- Dashboard with statistics
+## ✨ Features
+- **Patient Management**:
+  - Add new patients with complete medical profiles
+  - View and search existing patients
+  - Update patient information
+  - Delete patient records
+- **Advanced Filtering**:
+  - Filter by name, PID, city, doctor, or status
+- **Dashboard Analytics**:
+  - Real-time statistics on patients and doctors
+- **Doctor Management**:
+  - Assign doctors to patients
+  - Track active/inactive doctors
 
-## Technologies Used
+## 🛠️ Technologies Used
+| Category         | Technologies                                                                |
+|------------------|-----------------------------------------------------------------------------|
+| **Frontend**     | HTML5, Bootstrap 5, jQuery, AJAX                                            |
+| **Backend**      | Node.js, Express.js                                                         |
+| **Database**     | MongoDB                                                                     |
+| **Architecture** | RESTful API                                                                 |
 
-- Frontend: HTML5, Bootstrap 5, jQuery, AJAX
-- Backend: Node.js, Express.js
-- Database: MongoDB
-- RESTful API architecture
+## 🚀 Complete Installation Guide
 
-## Installation
+### Prerequisites
+- Node.js (v16 or later)
+- MongoDB Atlas account or local MongoDB instance
+- Git
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Create a `.env` file based on `.env.example`
-4. Start the server: `npm start`
-5. Access the application at `http://localhost:3000`
-
-## API Endpoints
-
-- `GET /api/patients` - Get all patients
-- `POST /api/patients` - Create a new patient
-- `GET /api/patients/:pid` - Get a specific patient
-- `PUT /api/patients/:pid` - Update a patient
-- `DELETE /api/patients/:pid` - Delete a patient
-- `GET /api/patients/stats` - Get patient statistics
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/KING-UPE/patient-management-system.git
+cd patient-management-system
