@@ -1,0 +1,22 @@
+{
+  "name": "patient-record-system",
+  "version": "1.0.0",
+  "description": "Patient Record Management System",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "vercel-build": "npm install && cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^7.8.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

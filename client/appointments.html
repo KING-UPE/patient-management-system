@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Appointments - Patient Record System</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container-fluid bg-light p-0">
+        <div class="row gx-0 d-none d-lg-flex">
+            <div class="col-lg-7 px-5 text-start">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-map-marker-alt text-primary me-2"></small>
+                    <small>Teaching Hospital, Medical Center</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center py-3">
+                    <small class="far fa-clock text-primary me-2"></small>
+                    <small>Mon - Fri : 08.00 AM - 08.00 PM</small>
+                </div>
+            </div>
+            <div class="col-lg-5 px-5 text-end">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-phone-alt text-primary me-2"></small>
+                    <small>+0123 456 7890</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center">
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://github.com/KING-UPE"><i class="fab fa-github"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://web.facebook.com/profile.php?id=61574713296803"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://www.linkedin.com/in/upendra-uddimantha-dasanayaka"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-0" href="https://www.instagram.com/__crazy._.demon__/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h1 class="m-0 text-primary"><i class="far fa-hospital me-3"></i>Patient Records</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.html" class="nav-item nav-link">Home</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Patient</a>
+                    <div class="dropdown-menu rounded-0 rounded-bottom m-0">
+                        <a href="add-patient.html" class="dropdown-item">Add Patient</a>
+                        <a href="view-patients.html" class="dropdown-item">View Patients</a>
+                    </div>
+                </div>
+                <a href="doctors.html" class="nav-item nav-link">Doctors</a>
+                <a href="medication-history.html" class="nav-item nav-link">Medication History</a>
+                <a href="add-appointment.html" class="nav-item nav-link active">Appointment</a>
+            </div>
+            <a href="add-patient.html" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Add Patient<i class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
+
+    <div class="container-fluid page-header py-5 mb-5">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3">Manage Appointments</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb text-uppercase mb-0">
+                    <li class="breadcrumb-item"><a class="text-white" href="index.html">Home</a></li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Appointments</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                        <button id="addAppointmentBtn" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>New Appointment
+                        </button>
+                        <div class="d-flex gap-2">
+                            <select id="doctorFilter" class="form-select" style="width: 200px;">
+                                <option value="">All Doctors</option>
+                                </select>
+                            <input type="date" id="dateFilter" class="form-control" style="width: 180px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="bg-light rounded p-4">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="appointmentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="appointmentModalLabel">New Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="appointmentForm">
+                        <input type="hidden" id="appointmentId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="appointmentPatient" class="form-label">Patient *</label>
+                                <select class="form-select" id="appointmentPatient" required>
+                                    <option value="">Select Patient</option>
+                                    </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="appointmentDoctor" class="form-label">Doctor *</label>
+                                <select class="form-select" id="appointmentDoctor" required>
+                                    <option value="">Select Doctor</option>
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="appointmentDate" class="form-label">Date *</label>
+                                <input type="date" class="form-control" id="appointmentDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="appointmentTime" class="form-label">Time Slot *</label>
+                                <select class="form-select" id="appointmentTime" required>
+                                    <option value="">Select Time</option>
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="appointmentReason" class="form-label">Reason</label>
+                            <textarea class="form-control" id="appointmentReason" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3" id="statusField" style="display: none;">
+                            <label class="form-label">Status</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="appointmentStatus" id="statusScheduled" value="Scheduled" checked>
+                                <label class="btn btn-outline-primary" for="statusScheduled">Scheduled</label>
+
+                                <input type="radio" class="btn-check" name="appointmentStatus" id="statusCompleted" value="Completed">
+                                <label class="btn btn-outline-success" for="statusCompleted">Completed</label>
+
+                                <input type="radio" class="btn-check" name="appointmentStatus" id="statusCancelled" value="Cancelled">
+                                <label class="btn btn-outline-danger" for="statusCancelled">Cancelled</label>
+
+                                <input type="radio" class="btn-check" name="appointmentStatus" id="statusNoShow" value="No-Show">
+                                <label class="btn btn-outline-warning" for="statusNoShow">No-Show</label>
+                            </div>
+                        </div>
+                        <div class="mb-3" id="notesField" style="display: none;">
+                            <label for="appointmentNotes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="appointmentNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveAppointmentBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h5 class="text-light mb-4">Address</h5>
+                    <div class="d-flex flex-wrap align-items-center justify-content-between">
+                        <div class="mb-3 mb-lg-0">
+                            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Medical Center, Hospital Road</p>
+                            <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+0123 456 7890</p>
+                            <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@hospital.com</p>
+                        </div>
+                        <div class="d-flex">
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://github.com/KING-UPE"><i class="fab fa-github"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://web.facebook.com/profile.php?id=61574713296803"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://www.linkedin.com/in/upendra-uddimantha-dasanayaka"><i class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://www.instagram.com/__crazy._.demon__/"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container py-3 border-top">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Patient Record System</a>, All Rights Reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    Designed By <a class="border-bottom" href="https://upendradasanayaka.vercel.app/ ">Upendra Uddimantha</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <script src="js/main.js"></script>
+    <script src="js/patient.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        let calendar;
+        let patients = [];
+        let doctors = [];
+
+        // Initialize calendar
+        function initCalendar() {
+            const calendarEl = document.getElementById('calendar');
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: function(fetchInfo, successCallback, failureCallback) {
+                    const doctorId = $('#doctorFilter').val();
+                    const date = $('#dateFilter').val();
+
+                    let url = '/api/appointments?';
+                    if (doctorId) url += `doctorId=${doctorId}&`;
+                    if (date) url += `date=${date}&`;
+
+                    $.get(url, function(appointments) {
+                        const events = appointments.map(appt => ({
+                            id: appt._id,
+                            // MODIFIED: Display patient PID and name, with fallback to "Unknown"
+                            title: `${appt.patient?.PID || 'Unknown Patient'} - ${appt.patient?.FirstName || ''} ${appt.patient?.LastName || ''} - ${appt.doctor?.name || 'Unknown Doctor'}`,
+                            start: `${appt.date.split('T')[0]}T${appt.startTime}:00`,
+                            end: `${appt.date.split('T')[0]}T${appt.endTime}:00`,
+                            extendedProps: {
+                                patient: appt.patient,
+                                doctor: appt.doctor,
+                                reason: appt.reason,
+                                status: appt.status,
+                                notes: appt.notes
+                            },
+                            backgroundColor: getStatusColor(appt.status),
+                            borderColor: getStatusColor(appt.status)
+                        }));
+                        successCallback(events);
+                    }).fail(failureCallback);
+                },
+                eventClick: function(info) {
+                    viewAppointment(info.event);
+                },
+                dateClick: function(info) {
+                    newAppointment(info.dateStr);
+                },
+                slotMinTime: '08:00:00',
+                slotMaxTime: '18:00:00',
+                businessHours: {
+                    daysOfWeek: [1, 2, 3, 4, 5], // Monday - Friday
+                    startTime: '09:00',
+                    endTime: '17:00'
+                },
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                },
+                slotLabelFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                }
+            });
+
+            calendar.render();
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'Completed': return '#28a745';
+                case 'Cancelled': return '#dc3545';
+                case 'No-Show': return '#ffc107';
+                default: return '#007bff';
+            }
+        }
+
+        // Load patients and doctors
+        function loadData() {
+            showSpinner();
+
+            $.when(
+                $.get('/api/patients'),
+                $.get('/api/doctors?isActive=true')
+            ).done(function(patientsData, doctorsData) {
+                patients = patientsData[0];
+                doctors = doctorsData[0];
+
+                // Populate patient dropdown
+                const patientSelect = $('#appointmentPatient');
+                patientSelect.empty().append('<option value="">Select Patient</option>');
+                patients.forEach(patient => {
+                    patientSelect.append(`<option value="${patient._id}">${patient.FirstName} ${patient.LastName} (${patient.PID})</option>`);
+                });
+
+                // Populate doctor dropdown and filter
+                const doctorSelect = $('#appointmentDoctor');
+                const doctorFilter = $('#doctorFilter');
+                doctorSelect.empty().append('<option value="">Select Doctor</option>');
+                doctorFilter.empty().append('<option value="">All Doctors</option>');
+                doctors.forEach(doctor => {
+                    doctorSelect.append(`<option value="${doctor._id}">${doctor.name} (${doctor.specialization})</option>`);
+                    doctorFilter.append(`<option value="${doctor._id}">${doctor.name}</option>`);
+                });
+
+                hideSpinner();
+            }).fail(function() {
+                showAlert('danger', 'Failed to load data');
+                hideSpinner();
+            });
+        }
+
+        // New appointment
+        function newAppointment(dateStr) {
+            $('#appointmentModalLabel').text('New Appointment');
+            $('#appointmentForm')[0].reset();
+            $('#appointmentId').val('');
+            $('#statusField').hide();
+            $('#notesField').hide();
+
+            // Enable all fields
+            $('#appointmentPatient, #appointmentDoctor, #appointmentDate, #appointmentTime, #appointmentReason')
+                .prop('disabled', false);
+
+            // Clear time slots when opening new appointment
+            $('#appointmentTime').empty().append('<option value="">Select Time</option>');
+
+            if (dateStr) {
+                $('#appointmentDate').val(dateStr.split('T')[0]);
+            }
+
+            $('#appointmentModal').modal('show');
+        }
+
+        // View/edit appointment
+        function viewAppointment(event) {
+            const appt = event.extendedProps;
+
+            $('#appointmentModalLabel').text('Appointment Details');
+            $('#appointmentId').val(event.id);
+            $('#appointmentPatient').val(appt.patient?._id || '').prop('disabled', true);
+            $('#appointmentDoctor').val(appt.doctor?._id || '').prop('disabled', true);
+            $('#appointmentDate').val(event.startStr.split('T')[0]).prop('disabled', true);
+            // Populate time dropdown with selected time
+            const selectedTime = event.startStr.split('T')[1].substring(0, 5);
+            $('#appointmentTime').empty().append(`<option value="${selectedTime}">${formatTimeSlot(selectedTime)}</option>`);
+            $('#appointmentTime').val(selectedTime).prop('disabled', true);
+
+            $('#appointmentReason').val(appt.reason || '').prop('disabled', true);
+            $(`input[name="appointmentStatus"][value="${appt.status || 'Scheduled'}"]`).prop('checked', true);
+            $('#appointmentNotes').val(appt.notes || '');
+
+            $('#statusField').show();
+            $('#notesField').show();
+            $('#appointmentModal').modal('show');
+        }
+
+        // Load available time slots when doctor and date are selected
+        $('#appointmentDoctor, #appointmentDate').change(function() {
+            const doctorId = $('#appointmentDoctor').val();
+            const date = $('#appointmentDate').val();
+
+            if (doctorId && date) {
+                // Clear previous slots and show loading
+                const timeSelect = $('#appointmentTime');
+                timeSelect.empty().append('<option value="">Loading slots...</option>');
+
+                $.get(`/api/appointments/available?doctorId=${doctorId}&date=${date}`, function(data) {
+                    timeSelect.empty().append('<option value="">Select Time</option>');
+
+                    if (data.availableSlots && data.availableSlots.length > 0) {
+                        data.availableSlots.forEach(slot => {
+                            // Ensure the slot is in HH:MM format (backend should return this format)
+                            if (/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(slot)) {
+                                const displayTime = formatTimeSlot(slot);
+                                timeSelect.append(`<option value="${slot}">${displayTime}</option>`);
+                            }
+                        });
+                    } else {
+                        // If no slots returned, generate default slots as fallback
+                        generateDefaultTimeSlots(timeSelect);
+                        showAlert('info', 'No specific available slots from API, showing default slots.');
+                    }
+                }).fail(function() {
+                    // If API fails, generate default slots as fallback
+                    const timeSelect = $('#appointmentTime');
+                    timeSelect.empty().append('<option value="">Select Time</option>');
+                    generateDefaultTimeSlots(timeSelect);
+                    showAlert('danger', 'Failed to load available time slots from server. Showing default options.');
+                });
+            } else if (!doctorId || !date) {
+                 // If either doctor or date is not selected, clear and provide a prompt
+                 const timeSelect = $('#appointmentTime');
+                 timeSelect.empty().append('<option value="">Select Doctor and Date to see slots</option>');
+            }
+        });
+
+        // Generate default time slots (9AM-5PM in 30-minute increments)
+        function generateDefaultTimeSlots(timeSelect) {
+            const startHour = 9; // 9AM
+            const endHour = 17;  // 5PM
+
+            for (let hour = startHour; hour <= endHour; hour++) {
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const time24 = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+                    const displayTime = formatTimeSlot(time24);
+                    timeSelect.append(`<option value="${time24}">${displayTime}</option>`);
+                }
+            }
+        }
+
+        // Format time as HH:MM AM/PM
+        function formatTimeSlot(time24) {
+            const [hours, minutes] = time24.split(':').map(Number);
+            const period = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+        }
+
+        // Save appointment
+        $('#saveAppointmentBtn').click(function() {
+            const appointmentId = $('#appointmentId').val();
+
+            if (appointmentId) {
+                updateAppointmentStatus();
+            } else {
+                createNewAppointment();
+            }
+        });
+
+        function createNewAppointment() {
+            const startTime = $('#appointmentTime').val();
+            const appointmentData = {
+                patientId: $('#appointmentPatient').val(),
+                doctorId: $('#appointmentDoctor').val(),
+                date: $('#appointmentDate').val(),
+                startTime: startTime,
+                endTime: calculateEndTime(startTime, 30), // 30 min duration
+                reason: $('#appointmentReason').val()
+            };
+
+            // Validate required fields
+            if (!appointmentData.patientId || !appointmentData.doctorId ||
+                !appointmentData.date || !appointmentData.startTime) {
+                showAlert('danger', 'Please fill all required fields');
+                return;
+            }
+
+            showSpinner();
+            $('#saveAppointmentBtn').prop('disabled', true);
+
+            $.ajax({
+                url: '/api/appointments',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(appointmentData),
+                success: function(response) {
+                    $('#appointmentModal').modal('hide');
+                    showAlert('success', 'Appointment created successfully!');
+                    calendar.refetchEvents();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error || 'Error saving appointment';
+                    showAlert('danger', errorMsg);
+                    console.error('Error creating appointment:', errorMsg, xhr);
+                },
+                complete: function() {
+                    hideSpinner();
+                    $('#saveAppointmentBtn').prop('disabled', false);
+                }
+            });
+        }
+
+        function updateAppointmentStatus() {
+            const appointmentId = $('#appointmentId').val();
+            const updateData = {
+                status: $('input[name="appointmentStatus"]:checked').val(),
+                notes: $('#appointmentNotes').val()
+            };
+
+            showSpinner();
+            $('#saveAppointmentBtn').prop('disabled', true);
+
+            $.ajax({
+                url: `/api/appointments/${appointmentId}/status`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(updateData),
+                success: function(response) {
+                    $('#appointmentModal').modal('hide');
+                    showAlert('success', 'Appointment updated successfully!');
+                    calendar.refetchEvents();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error || 'Error updating appointment';
+                    showAlert('danger', errorMsg);
+                    console.error('Error updating appointment:', errorMsg, xhr);
+                },
+                complete: function() {
+                    hideSpinner();
+                    $('#saveAppointmentBtn').prop('disabled', false);
+                }
+            });
+        }
+
+        // Calculate end time based on start time and duration
+        function calculateEndTime(startTime, duration) {
+            if (!startTime) return '';
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours, minutes + duration, 0, 0);
+            return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
+        // Filter appointments
+        $('#doctorFilter, #dateFilter').change(function() {
+            calendar.refetchEvents();
+        });
+
+        // Add appointment button
+        $('#addAppointmentBtn').click(function(e) {
+            e.preventDefault();
+            newAppointment();
+        });
+
+        // Alert function
+        function showAlert(type, message) {
+            const alertDiv = $(`
+                <div class="alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3" style="z-index: 9999;">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `);
+
+            $('body').append(alertDiv);
+
+            setTimeout(() => {
+                alertDiv.alert('close');
+            }, 5000);
+        }
+
+        // Spinner functions (assuming you have a spinner element with id 'spinner')
+        // You might need to add this to your HTML if it's not there:
+        // <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center" style="z-index: 9999;">
+        //     <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        //         <span class="sr-only">Loading...</span>
+        //     </div>
+        // </div>
+        function showSpinner() {
+            $('#spinner').css({
+                'opacity': '1',
+                'visibility': 'visible'
+            });
+        }
+
+        function hideSpinner() {
+            $('#spinner').css({
+                'opacity': '0',
+                'visibility': 'hidden'
+            });
+        }
+
+        // Initialize
+        initCalendar();
+        loadData();
+    });
+</script>
+</body>
+</html>

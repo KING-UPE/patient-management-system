@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>View Patients - Patient Record System</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <!-- Bootstrap CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Topbar -->
+    <div class="container-fluid bg-light p-0">
+        <div class="row gx-0 d-none d-lg-flex">
+            <div class="col-lg-7 px-5 text-start">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-map-marker-alt text-primary me-2"></small>
+                    <small>Teaching Hospital, Medical Center</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center py-3">
+                    <small class="far fa-clock text-primary me-2"></small>
+                    <small>Mon - Fri : 08.00 AM - 08.00 PM</small>
+                </div>
+            </div>
+            <div class="col-lg-5 px-5 text-end">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-phone-alt text-primary me-2"></small>
+                    <small>+0123 456 7890</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center">
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://github.com/KING-UPE"><i class="fab fa-github"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://web.facebook.com/profile.php?id=61574713296803"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://www.linkedin.com/in/upendra-uddimantha-dasanayaka"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-0" href="https://www.instagram.com/__crazy._.demon__/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h1 class="m-0 text-primary"><i class="far fa-hospital me-3"></i>Patient Records</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.html" class="nav-item nav-link">Home</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Patient</a>
+                    <div class="dropdown-menu rounded-0 rounded-bottom m-0">
+                        <a href="add-patient.html" class="dropdown-item">Add Patient</a>
+                        <a href="view-patients.html" class="dropdown-item">View Patients</a>
+                    </div>
+                </div>
+                <a href="doctors.html" class="nav-item nav-link">Doctors</a>
+                <a href="medication-history.html" class="nav-item nav-link">Medication History</a>
+                <a href="add-appointment.html" class="nav-item nav-link">Appointment</a>
+            </div>
+            <a href="add-patient.html" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Add Patient<i class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="container-fluid page-header py-5 mb-5">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3">Patient Records</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb text-uppercase mb-0">
+                    <li class="breadcrumb-item"><a class="text-white" href="index.html">Home</a></li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Patients</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+   <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="bg-light rounded p-5">
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <input type="text" id="searchByName" class="form-control" placeholder="Search by name...">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" id="searchByPid" class="form-control" placeholder="Search by PID...">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" id="searchByGuardian" class="form-control" placeholder="Search by guardian...">
+                            </div>
+                            <div class="col-md-2">
+                                <select id="filterByCity" class="form-select">
+                                    <option value="">All Cities</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="filterByDoctor" class="form-select">
+                                    <option value="">All Doctors</option>
+                                    <!-- Will be populated by JavaScript -->
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <button id="resetFilters" class="btn btn-secondary w-100">Reset</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table id="patientsTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>PID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>City</th>
+                                        <th>Doctor</th>
+                                        <th>Guardian</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Will be populated by jQuery -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <!-- Address Section (Left-aligned, full width) -->
+                <div class="col-lg-12">
+                    <h5 class="text-light mb-4">Address</h5>
+                    <div class="d-flex flex-wrap align-items-center justify-content-between">
+                        <!-- Contact Details -->
+                        <div class="mb-3 mb-lg-0">
+                            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Medical Center, Hospital Road</p>
+                            <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+0123 456 7890</p>
+                            <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@hospital.com</p>
+                        </div>
+                        <!-- Social Icons (Right-aligned) -->
+                        <div class="d-flex">
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://github.com/KING-UPE"><i class="fab fa-github"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://web.facebook.com/profile.php?id=61574713296803"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://www.linkedin.com/in/upendra-uddimantha-dasanayaka"><i class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://www.instagram.com/__crazy._.demon__/"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright Section -->
+        <div class="container py-3 border-top">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Patient Record System</a>, All Rights Reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    Designed By <a class="border-bottom" href="https://upendradasanayaka.vercel.app/">Upendra Uddimantha</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="js/patient.js"></script>
+</body>
+</html>

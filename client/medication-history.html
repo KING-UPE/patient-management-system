@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Medication History - Patient Record System</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Topbar -->
+    <div class="container-fluid bg-light p-0">
+        <div class="row gx-0 d-none d-lg-flex">
+            <div class="col-lg-7 px-5 text-start">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-map-marker-alt text-primary me-2"></small>
+                    <small>Teaching Hospital, Medical Center</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center py-3">
+                    <small class="far fa-clock text-primary me-2"></small>
+                    <small>Mon - Fri : 08.00 AM - 08.00 PM</small>
+                </div>
+            </div>
+            <div class="col-lg-5 px-5 text-end">
+                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
+                    <small class="fa fa-phone-alt text-primary me-2"></small>
+                    <small>+0123 456 7890</small>
+                </div>
+                <div class="h-100 d-inline-flex align-items-center">
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://github.com/KING-UPE"><i class="fab fa-github"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://web.facebook.com/profile.php?id=61574713296803"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-1" href="https://www.linkedin.com/in/upendra-uddimantha-dasanayaka"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-sm-square rounded-circle bg-white text-primary me-0" href="https://www.instagram.com/__crazy._.demon__/"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top p-0">
+        <a href="index.html" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <h1 class="m-0 text-primary"><i class="far fa-hospital me-3"></i>Patient Records</h1>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="index.html" class="nav-item nav-link">Home</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Patient</a>
+                    <div class="dropdown-menu rounded-0 rounded-bottom m-0">
+                        <a href="add-patient.html" class="dropdown-item">Add Patient</a>
+                        <a href="view-patients.html" class="dropdown-item">View Patients</a>
+                    </div>
+                </div>
+                <a href="doctors.html" class="nav-item nav-link">Doctors</a>
+                <a href="medication-history.html" class="nav-item nav-link active">Medication History</a>
+                <a href="add-appointment.html" class="nav-item nav-link">Appointment</a>
+            </div>
+            <a href="add-patient.html" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">Add Patient<i class="fa fa-arrow-right ms-3"></i></a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="container-fluid page-header py-5 mb-5">
+        <div class="container py-5">
+            <h1 class="display-3 text-white mb-3">Medication History</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb text-uppercase mb-0">
+                    <li class="breadcrumb-item"><a class="text-white" href="index.html">Home</a></li>
+                    <li class="breadcrumb-item text-primary active" aria-current="page">Medication History</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Medication History Content -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row mb-4 align-items-center">
+                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-4">
+                            <button id="addMedicationBtn" class="btn btn-primary order-md-1 order-2 w-100 w-md-auto">
+                                Add Medication Record
+                            </button>
+                            <button id="importMedicationsBtn" class="btn btn-secondary order-md-2 order-1 w-100 w-md-auto">
+                                Import Medications
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-light rounded p-5">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <input type="text" id="searchPatient" class="form-control" placeholder="Search by patient name or ID...">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="date" id="filterByDate" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <button id="resetFilters" class="btn btn-secondary w-100">Reset</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table id="medicationHistoryTable" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Patient</th>
+                                        <th>Medications</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Will be populated by jQuery -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medication Modal -->
+    <div class="modal fade" id="medicationModal" tabindex="-1" aria-labelledby="medicationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="medicationModalLabel">Add/Edit Medication Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" tabindex="-1"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="medicationForm">
+                        <input type="hidden" id="medicationId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="medicationPatient" class="form-label">Patient *</label>
+                                <select class="form-select" id="medicationPatient" required>
+                                    <option value="">Select Patient</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="medicationDate" class="form-label">Date *</label>
+                                <input type="date" class="form-control" id="medicationDate" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Medications *</label>
+                                <div class="mb-3 tag-container" id="medicationsContainer"></div>
+                                <div class="input-group">
+                                    <input type="text" class="form-control tag-input" 
+                                        id="medicationInput" placeholder="Type medication and press Enter">
+                                    <button class="btn btn-outline-primary add-tag-btn" type="button">Add</button>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="medicationNotes" class="form-label">Notes</label>
+                                <textarea class="form-control" id="medicationNotes" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveMedicationBtn">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">Import Medications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="importForm">
+                        <div class="mb-3">
+                            <label for="importPatient" class="form-label">Patient *</label>
+                            <select class="form-select" id="importPatient" required>
+                                <option value="">Select Patient</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="importDate" class="form-label">Date *</label>
+                            <input type="date" class="form-control" id="importDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="importFile" class="form-label">CSV File *</label>
+                            <input type="file" class="form-control" id="importFile" accept=".csv" required>
+                            <small class="text-muted">CSV format: medication1,medication2,medication3 (one line)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="importNotes" class="form-label">Notes</label>
+                            <textarea class="form-control" id="importNotes" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="processImportBtn">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <!-- Address Section (Left-aligned, full width) -->
+                <div class="col-lg-12">
+                    <h5 class="text-light mb-4">Address</h5>
+                    <div class="d-flex flex-wrap align-items-center justify-content-between">
+                        <!-- Contact Details -->
+                        <div class="mb-3 mb-lg-0">
+                            <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Medical Center, Hospital Road</p>
+                            <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+0123 456 7890</p>
+                            <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@hospital.com</p>
+                        </div>
+                        <!-- Social Icons (Right-aligned) -->
+                        <div class="d-flex">
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://github.com/KING-UPE"><i class="fab fa-github"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://web.facebook.com/profile.php?id=61574713296803"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://www.linkedin.com/in/upendra-uddimantha-dasanayaka"><i class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-light btn-social rounded-circle mx-2" href="https://www.instagram.com/__crazy._.demon__/"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright Section -->
+        <div class="container py-3 border-top">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="#">Patient Record System</a>, All Rights Reserved.
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    Designed By <a class="border-bottom" href="https://upendradasanayaka.vercel.app/ ">Upendra Uddimantha</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/tempusdominus/js/moment.min.js"></script>
+    <script src="lib/tempusdominus/js/moment-timezone.min.js"></script>
+    <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    
+    <!-- Medication History JS -->
+    <script>
+    $(document).ready(function() {
+        let medicationHistoryTable; // Declare DataTable instance in an accessible scope
+
+        // Initialize DataTable function
+        // This function will be called when the table needs to be set up or re-drawn
+        function initDataTable() {
+            // Destroy existing DataTable if it exists
+            if ($.fn.DataTable.isDataTable('#medicationHistoryTable')) {
+                medicationHistoryTable.destroy();
+                $('#medicationHistoryTable tbody').empty();
+            }
+
+            // Initialize with basic configuration
+            medicationHistoryTable = $('#medicationHistoryTable').DataTable({
+                responsive: true,
+                paging: false,
+                searching: false,
+                info: false,
+                lengthChange: false,
+                order: [[0, 'desc']],
+                // Disable automatic column detection
+                columns: [
+                    { data: 'date' },
+                    { data: 'patient' },
+                    { data: 'medications' },
+                    { data: 'notes' },
+                    { data: 'actions' }
+                ],
+                // Disable automatic data loading
+                data: []
+            });
+        }
+
+        // Function to show a loading spinner (placeholder for actual spinner)
+
+
+        // Function to hide the loading spinner
+        function hideSpinner() {
+            $('#loading-spinner').remove();
+        }
+
+        // Load medication history function
+        function loadMedicationHistory(search = '', date = '') {
+            showSpinner();
+            console.log('Fetching medications with search:', search, 'and date:', date);
+
+            $.ajax({
+                url: `/api/medications?search=${encodeURIComponent(search)}&date=${encodeURIComponent(date)}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function(records) {
+                    console.log('API Response:', records);
+                    
+                    // Clear existing data
+                    medicationHistoryTable.clear().draw();
+                    
+                    if (!records || records.length === 0) {
+                        console.log('No records found');
+                        $('#medicationHistoryTable tbody').html(
+                            '<tr><td colspan="5" class="text-center">No medication records found</td></tr>'
+                        );
+                        return;
+                    }
+
+                    // Format data for DataTables
+                    const formattedData = records.map(record => {
+                        // Format date
+                        const formattedDate = record.date ? new Date(record.date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        }) : 'N/A';
+                        
+                        // Format patient name
+                        const patientName = record.patient ? 
+                            `${record.patient.FirstName || ''} ${record.patient.LastName || ''} (${record.patient.PID || 'N/A'})` :
+                            'Unknown Patient';
+                        
+                        // Format medications
+                        const medicationsDisplay = Array.isArray(record.medications) ? 
+                            record.medications.join(', ') : 
+                            '';
+                        
+                        // Create action buttons
+                        const actions = `
+                            <button class="btn btn-sm btn-primary edit-medication" data-id="${record._id}">Edit</button>
+                            <button class="btn btn-sm btn-danger delete-medication" data-id="${record._id}">Delete</button>
+                        `;
+                        
+                        return {
+                            date: formattedDate,
+                            patient: patientName,
+                            medications: medicationsDisplay,
+                            notes: record.notes || '-',
+                            actions: actions,
+                            // Add raw data for sorting
+                            _date: record.date
+                        };
+                    });
+
+                    // Add data to DataTable
+                    medicationHistoryTable.rows.add(formattedData).draw();
+                    
+                    // Set proper sorting by actual date (not formatted string)
+                    medicationHistoryTable.column(0).data().sort((a, b) => {
+                        return new Date(b._date) - new Date(a._date);
+                    }).draw();
+                    
+                    hideSpinner();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error, 'Response:', xhr.responseText);
+                    $('#medicationHistoryTable tbody').html(
+                        '<tr><td colspan="5" class="text-center text-danger">Error loading medication history</td></tr>'
+                    );
+                    hideSpinner();
+                }
+            });
+        }
+
+        // Load patients dropdown for both add/edit and import modals
+        // Returns a Promise to handle asynchronous loading for the edit functionality
+        function loadPatientsDropdown(selector) {
+            return new Promise((resolve, reject) => {
+                $.get('/api/patients')
+                    .done(function(patients) {
+                        const dropdown = $(selector);
+                        dropdown.empty().append('<option value="">Select Patient</option>');
+
+                        patients.forEach(patient => {
+                            dropdown.append(`<option value="${patient._id}">${patient.FirstName} ${patient.LastName} (${patient.PID})</option>`);
+                        });
+                        resolve(); // Resolve the promise on success
+                    }).fail(function(xhr, status, error) {
+                        console.error('Failed to load patients:', error);
+                        showAlert('danger', 'Failed to load patient list.');
+                        reject(error); // Reject the promise on failure
+                    });
+            });
+        }
+
+        // Event listener for "Add Medication Record" button click
+        $('#addMedicationBtn').click(function() {
+            $('#medicationModalLabel').text('Add Medication Record');
+            $('#medicationForm')[0].reset(); // Clear the form
+            $('#medicationId').val(''); // Clear hidden ID for new record
+            $('#medicationsContainer').empty(); // Clear medication tags
+            $('#medicationDate').val(new Date().toISOString().split('T')[0]); // Set current date as default
+            loadPatientsDropdown('#medicationPatient'); // Load patients for dropdown
+            $('#medicationModal').modal('show'); // Show the modal
+        });
+
+        // Event listener for "Import Medications" button click
+        $('#importMedicationsBtn').click(function() {
+            $('#importForm')[0].reset(); // Clear the import form
+            $('#importDate').val(new Date().toISOString().split('T')[0]); // Set current date as default
+            loadPatientsDropdown('#importPatient'); // Load patients for import dropdown
+            $('#importModal').modal('show'); // Show the import modal
+        });
+
+        // Event listener for "Process Import" button click in the import modal
+        $('#processImportBtn').click(function() {
+            const fileInput = $('#importFile')[0];
+            const patientId = $('#importPatient').val();
+            const date = $('#importDate').val();
+            const notes = $('#importNotes').val();
+
+            // Basic validation for import fields
+            if (!patientId || !date || !fileInput.files.length) {
+                showAlert('danger', 'Please select a patient, date, and a CSV file for import.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const content = e.target.result;
+                // Split by comma, trim whitespace, and filter out empty strings
+                const medications = content.split(',').map(m => m.trim()).filter(m => m);
+
+                if (medications.length === 0) {
+                    showAlert('danger', 'No valid medications found in the CSV file. Please ensure it is comma-separated.');
+                    return;
+                }
+
+                const medicationData = {
+                    patient: patientId,
+                    date: date,
+                    medications: medications,
+                    notes: notes
+                };
+
+                saveMedication(medicationData, true); // Call save function, indicating it's an import
+                $('#importModal').modal('hide'); // Hide import modal after processing
+            };
+
+            reader.onerror = function() {
+                showAlert('danger', 'Error reading file.');
+            };
+
+            reader.readAsText(file); // Read the file content as text
+        });
+
+        // Event listener for "Edit" button click (delegated for dynamically added buttons)
+        $(document).on('click', '.edit-medication', function() {
+            const id = $(this).data('id'); // Get medication ID from data attribute
+
+            $.get(`/api/medications/${id}`)
+                .done(function(record) {
+                    $('#medicationModalLabel').text('Edit Medication Record');
+                    $('#medicationId').val(record._id); // Set hidden ID for editing
+                    // Format date to YYYY-MM-DD for input type="date"
+                    $('#medicationDate').val(new Date(record.date).toISOString().split('T')[0]);
+                    $('#medicationNotes').val(record.notes || '');
+
+                    // Populate medications container with tags
+                    const container = $('#medicationsContainer');
+                    container.empty(); // Clear existing tags
+                    if (Array.isArray(record.medications)) {
+                        record.medications.forEach(med => {
+                            addTagToContainer(container, med); // Use helper to add tags
+                        });
+                    }
+
+                    // Load patient dropdown and then set the selected patient
+                    loadPatientsDropdown('#medicationPatient').then(() => {
+                        // Ensure record.patient is either an object (populated) or a string (just ID)
+                        $('#medicationPatient').val(record.patient && record.patient._id ? record.patient._id : record.patient);
+                    }).catch(error => {
+                        console.error("Error setting patient dropdown on edit:", error);
+                    });
+
+                    $('#medicationModal').modal('show'); // Show the modal
+                }).fail(function(xhr, status, error) {
+                    console.error('Error fetching medication record for edit:', error, xhr.responseText);
+                    showAlert('danger', xhr.responseJSON?.error || 'Failed to load medication record for editing.');
+                });
+        });
+
+        // Event listener for "Save" button click in the medication modal
+        $('#saveMedicationBtn').click(function() {
+            const medicationId = $('#medicationId').val(); // Get hidden ID (if editing)
+            const patientId = $('#medicationPatient').val();
+            const date = $('#medicationDate').val();
+            const medicationsArray = collectTags('#medicationsContainer'); // Collect tags from container
+            const notes = $('#medicationNotes').val();
+
+            // Client-side validation
+            if (!patientId) {
+                showAlert('danger', 'Please select a patient.');
+                return;
+            }
+            if (!date) {
+                showAlert('danger', 'Please select a date.');
+                return;
+            }
+            if (medicationsArray.length === 0) {
+                showAlert('danger', 'Please add at least one medication.');
+                return;
+            }
+
+            const medicationData = {
+                patient: patientId,
+                date: date,
+                medications: medicationsArray,
+                notes: notes
+            };
+
+            saveMedication(medicationData, false, medicationId); // Call save function
+        });
+
+        // Generic function to save (create or update) medication records
+        function saveMedication(data, isImport = false, id = null) {
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/api/medications/${id}` : '/api/medications';
+
+            $.ajax({
+                url: url,
+                type: method,
+                contentType: 'application/json', // Set content type for JSON data
+                data: JSON.stringify(data), // Convert data object to JSON string
+                success: function(response) {
+                    $('#medicationModal').modal('hide'); // Hide modal on success
+                    $('#importModal').modal('hide'); // Also hide import modal if it was an import
+                    showAlert('success', isImport ? 'Medications imported successfully!' : (id ? 'Medication record updated successfully!' : 'Medication record added successfully!'));
+                    // Reload table with current filters
+                    loadMedicationHistory($('#searchPatient').val(), $('#filterByDate').val());
+                },
+                error: function(xhr) {
+                    console.error('Error saving medication:', xhr.responseJSON || xhr.responseText);
+                    showAlert('danger', xhr.responseJSON?.error || 'Error saving medication record. Please check your inputs.');
+                }
+            });
+        }
+
+        // Event listener for "Delete" button click (delegated)
+        $(document).on('click', '.delete-medication', function() {
+            const id = $(this).data('id'); // Get medication ID
+
+            // Custom confirmation dialog (since alert() is not allowed)
+            showConfirmationModal('Are you sure you want to delete this medication record?', function() {
+                $.ajax({
+                    url: `/api/medications/${id}`,
+                    type: 'DELETE',
+                    success: function() {
+                        showAlert('success', 'Medication record deleted successfully!');
+                        // Reload table with current filters
+                        loadMedicationHistory($('#searchPatient').val(), $('#filterByDate').val());
+                    },
+                    error: function(xhr) {
+                        console.error('Error deleting medication:', xhr.responseJSON || xhr.responseText);
+                        showAlert('danger', xhr.responseJSON?.error || 'Error deleting medication record.');
+                    }
+                });
+            });
+        });
+
+        // Event listener for search input (keyup)
+        $('#searchPatient').on('keyup', function() {
+            loadMedicationHistory($(this).val(), $('#filterByDate').val());
+        });
+
+        // Event listener for date filter (change)
+        $('#filterByDate').on('change', function() {
+            loadMedicationHistory($('#searchPatient').val(), $(this).val());
+        });
+
+        // Event listener for "Reset Filters" button
+        $('#resetFilters').click(function() {
+            $('#searchPatient').val(''); // Clear search input
+            $('#filterByDate').val(''); // Clear date filter
+            loadMedicationHistory(); // Load all history
+        });
+
+        // Tag input functionality for Medications field
+        $('#medicationInput').on('keypress', function(e) {
+            if (e.which === 13) { // Enter key
+                e.preventDefault(); // Prevent form submission
+                addTag($(this));
+            }
+        });
+
+        $('.add-tag-btn').click(function() {
+            const input = $(this).siblings('.tag-input');
+            addTag(input);
+        });
+
+        // Helper function to add a single tag to the container
+        function addTag(input) {
+            const value = input.val().trim();
+            if (!value) return; // Don't add empty tags
+
+            const container = $('#medicationsContainer');
+            // Check for duplicate tags (case-insensitive)
+            const existingTags = container.find('.badge').map(function() {
+                return $(this).text().replace('×', '').trim().toLowerCase();
+            }).get();
+
+            if (existingTags.includes(value.toLowerCase())) {
+                input.val(''); // Clear input if tag already exists
+                showAlert('info', `Medication "${value}" already added.`);
+                return;
+            }
+
+            addTagToContainer(container, value);
+            input.val(''); // Clear input field after adding tag
+        }
+
+        // Reusable helper function to append a tag element to a container
+        function addTagToContainer(container, value) {
+            const tag = $(`
+                <span class="badge bg-primary me-1 mb-1">
+                    ${value}
+                    <span class="ms-1 remove-tag" style="cursor:pointer;">&times;</span>
+                </span>
+            `);
+            container.append(tag);
+
+            // Attach click handler to remove the tag
+            tag.find('.remove-tag').click(function() {
+                tag.remove();
+            });
+        }
+
+
+        // Helper function to collect all tags from a specified container
+        function collectTags(containerSelector) {
+            const tags = [];
+            $(`${containerSelector} .badge`).each(function() {
+                tags.push($(this).text().replace('×', '').trim());
+            });
+            return tags;
+        }
+
+        // Helper function to display Bootstrap alerts
+        function showAlert(type, message) {
+            const alertPlaceholder = $('.container-xxl'); // Or a dedicated alert area
+            const alertHtml = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+            const alertElement = $(alertHtml);
+
+            alertPlaceholder.prepend(alertElement); // Add to the top of the container
+
+            // Automatically close the alert after 5 seconds
+            setTimeout(() => {
+                alertElement.alert('close');
+            }, 5000);
+        }
+
+        // Custom confirmation modal (replaces window.confirm)
+        function showConfirmationModal(message, confirmCallback) {
+            // Create a simple modal on the fly or use a predefined one
+            const modalId = 'customConfirmModal';
+            let modal = $(`#${modalId}`);
+
+            if (modal.length === 0) {
+                modal = $(`
+                    <div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="${modalId}Label">Confirm Action</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="confirmMessage"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-danger" id="confirmActionBtn">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+                $('body').append(modal); // Append to body to ensure it's not nested incorrectly
+            }
+
+            $('#confirmMessage').text(message); // Set message
+            const confirmBtn = $('#confirmActionBtn');
+
+            // Remove previous event listeners to prevent multiple calls
+            confirmBtn.off('click');
+
+            confirmBtn.on('click', function() {
+                if (confirmCallback) {
+                    confirmCallback(); // Execute callback if confirmed
+                }
+                modal.modal('hide'); // Hide modal
+            });
+
+            modal.modal('show'); // Show the modal
+        }
+
+        // Initial load of medication history when the page is ready
+        initDataTable(); // Initialize DataTable structure first
+        loadMedicationHistory(); // Then load the data
+    });
+</script>
+</body>
+</html>
