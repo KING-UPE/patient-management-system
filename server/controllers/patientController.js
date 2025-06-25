@@ -90,6 +90,10 @@ exports.updatePatient = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 56dd1b47799f168e49bc158293719968591f80dc
 exports.getAllPatients = async (req, res) => {
     try {
         const { name, pid, city, doctor, guardian, limit } = req.query;
@@ -125,6 +129,7 @@ exports.getAllPatients = async (req, res) => {
     }
 };
 
+<<<<<<< HEAD
 exports.createPatient = async (req, res) => {
     try {
         const { FirstName, LastName } = req.body;
@@ -144,11 +149,32 @@ exports.createPatient = async (req, res) => {
             Doctor: req.body.Doctor || null,
             Guardian: req.body.Guardian,
             Status: req.body.Status || 'Active',
+=======
+// Add the new functions here
+exports.createPatient = async (req, res) => {
+    try {
+        const { PID, FirstName, LastName, Email, NearCity, Doctor, Guardian, Status } = req.body;
+        
+        if (!PID || !FirstName || !LastName) {
+            return res.status(400).json({ error: 'PID, FirstName, and LastName are required' });
+        }
+        
+        const patient = new Patient({
+            PID,
+            FirstName,
+            LastName,
+            Email,
+            NearCity,
+            Doctor: Doctor || null,
+            Guardian,
+            Status: Status || 'Active',
+>>>>>>> 56dd1b47799f168e49bc158293719968591f80dc
             MedicalConditions: req.body.MedicalConditions || [],
             Medications: req.body.Medications || [],
             Allergies: req.body.Allergies || [],
             LastVisitDate: new Date()
         });
+<<<<<<< HEAD
 
         // This will trigger the pre-save hook to generate the actual PID
         await patient.save();
@@ -179,6 +205,13 @@ exports.createPatient = async (req, res) => {
             error: 'Server error',
             message: err.message
         });
+=======
+        
+        await patient.save();
+        res.status(201).json(patient);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+>>>>>>> 56dd1b47799f168e49bc158293719968591f80dc
     }
 };
 

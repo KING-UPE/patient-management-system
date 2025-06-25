@@ -80,6 +80,10 @@ function handleAddPatient() {
     
     // Collect form data
     const formData = {
+<<<<<<< HEAD
+=======
+        PID: $('#pid').val(),
+>>>>>>> 56dd1b47799f168e49bc158293719968591f80dc
         FirstName: $('#firstName').val(),
         LastName: $('#lastName').val(),
         Email: $('#email').val(),
@@ -94,8 +98,13 @@ function handleAddPatient() {
     };
 
     // Validate required fields
+<<<<<<< HEAD
     if (!formData.FirstName || !formData.LastName) {
         showAlert('danger', 'First Name and Last Name are required');
+=======
+    if (!formData.PID || !formData.FirstName || !formData.LastName) {
+        showAlert('danger', 'PID, First Name, and Last Name are required');
+>>>>>>> 56dd1b47799f168e49bc158293719968591f80dc
         hideSpinner();
         return;
     }

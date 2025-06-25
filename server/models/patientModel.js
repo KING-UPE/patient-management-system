@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const patientSchema = new mongoose.Schema({
+<<<<<<< HEAD
     PID: { 
         type: String, 
         required: true, 
@@ -32,6 +33,12 @@ const patientSchema = new mongoose.Schema({
             message: props => `${props.value} is not a valid email address`
         }
     },
+=======
+    PID: { type: String, required: true, unique: true, trim: true },
+    FirstName: { type: String, required: true, trim: true },
+    LastName: { type: String, required: true, trim: true },
+    Email: { type: String, trim: true, lowercase: true },
+>>>>>>> 56dd1b47799f168e49bc158293719968591f80dc
     NearCity: { type: String, trim: true },
     Doctor: { 
         type: mongoose.Schema.Types.ObjectId, 
@@ -47,6 +54,7 @@ const patientSchema = new mongoose.Schema({
         enum: ['Active', 'Inactive', 'Deceased'], 
         default: 'Active' 
     },
+<<<<<<< HEAD
     LastVisitDate: { type: Date, default: Date.now }
 }, { 
     timestamps: true
@@ -87,6 +95,23 @@ patientSchema.pre('save', async function(next) {
         this.PID = `PAT${Date.now().toString().slice(-6)}`;
         next();
     }
+=======
+    LastVisitDate: { type: Date }
+}, { 
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+// Automatic population of Doctor field
+patientSchema.pre(/^find/, function(next) {
+    this.populate({
+        path: 'Doctor',
+        select: '_id name specialization isActive',
+        options: { lean: true }
+    });
+    next();
+>>>>>>> 56dd1b47799f168e49bc158293719968591f80dc
 });
 
 module.exports = mongoose.model('Patient', patientSchema);
