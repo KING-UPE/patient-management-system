@@ -169,6 +169,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger me-auto" id="deleteAppointmentBtn" style="display: none;">Delete Appointment</button>
                     <button type="button" class="btn btn-primary" id="saveAppointmentBtn">Save</button>
                 </div>
             </div>
@@ -207,6 +208,24 @@
             </div>
         </div>
     </div>
+        <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this appointment? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete Appointment</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -223,8 +242,8 @@
     <script src="js/main.js"></script>
     <script src="js/patient.js"></script>
 
-    <script>
-    $(document).ready(function() {
+<script>
+        $(document).ready(function() {
         let calendar;
         let patients = [];
         let doctors = [];
@@ -251,7 +270,6 @@
                     $.get(url, function(appointments) {
                         const events = appointments.map(appt => ({
                             id: appt._id,
-                            // MODIFIED: Display patient PID and name, with fallback to "Unknown"
                             title: `${appt.patient?.PID || 'Unknown Patient'} - ${appt.patient?.FirstName || ''} ${appt.patient?.LastName || ''} - ${appt.doctor?.name || 'Unknown Doctor'}`,
                             start: `${appt.date.split('T')[0]}T${appt.startTime}:00`,
                             end: `${appt.date.split('T')[0]}T${appt.endTime}:00`,
@@ -347,6 +365,7 @@
             $('#appointmentId').val('');
             $('#statusField').hide();
             $('#notesField').hide();
+            $('#deleteAppointmentBtn').hide();
 
             // Enable all fields
             $('#appointmentPatient, #appointmentDoctor, #appointmentDate, #appointmentTime, #appointmentReason')
@@ -382,6 +401,7 @@
 
             $('#statusField').show();
             $('#notesField').show();
+            $('#deleteAppointmentBtn').show();
             $('#appointmentModal').modal('show');
         }
 
@@ -458,6 +478,39 @@
             }
         });
 
+        // Delete appointment
+        $('#deleteAppointmentBtn').click(function() {
+            const appointmentId = $('#appointmentId').val();
+            
+            if (confirm('Are you sure you want to delete this appointment? This action cannot be undone.')) {
+                deleteAppointment(appointmentId);
+            }
+        });
+
+        function deleteAppointment(appointmentId) {
+            showSpinner();
+            $('#deleteAppointmentBtn').prop('disabled', true);
+
+            $.ajax({
+                url: `/api/appointments/${appointmentId}`,
+                type: 'DELETE',
+                success: function(response) {
+                    $('#appointmentModal').modal('hide');
+                    showAlert('success', 'Appointment deleted successfully!');
+                    calendar.refetchEvents();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON?.error || 'Error deleting appointment';
+                    showAlert('danger', errorMsg);
+                    console.error('Error deleting appointment:', errorMsg, xhr);
+                },
+                complete: function() {
+                    hideSpinner();
+                    $('#deleteAppointmentBtn').prop('disabled', false);
+                }
+            });
+        }
+
         function createNewAppointment() {
             const startTime = $('#appointmentTime').val();
             const appointmentData = {
@@ -500,7 +553,7 @@
                 }
             });
         }
-
+        
         function updateAppointmentStatus() {
             const appointmentId = $('#appointmentId').val();
             const updateData = {
@@ -569,13 +622,7 @@
             }, 5000);
         }
 
-        // Spinner functions (assuming you have a spinner element with id 'spinner')
-        // You might need to add this to your HTML if it's not there:
-        // <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center" style="z-index: 9999;">
-        //     <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-        //         <span class="sr-only">Loading...</span>
-        //     </div>
-        // </div>
+        // Spinner functions
         function showSpinner() {
             $('#spinner').css({
                 'opacity': '1',

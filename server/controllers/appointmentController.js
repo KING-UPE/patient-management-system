@@ -14,10 +14,10 @@ const calculateEndTime = (startTime, durationMinutes) => {
 // Create a new appointment
 exports.createAppointment = async (req, res) => {
     try {
-        const { patient, doctor, date, startTime, reason } = req.body;
+        const { patientId, doctorId, date, startTime, reason } = req.body;
 
         // Basic validation
-        if (!patient || !doctor || !date || !startTime) {
+        if (!patientId || !doctorId || !date || !startTime) {
             return res.status(400).json({ error: 'Patient, Doctor, Date, and Start Time are required.' });
         }
 
@@ -26,8 +26,8 @@ exports.createAppointment = async (req, res) => {
         const endTime = calculateEndTime(startTime, durationMinutes);
 
         const newAppointment = new Appointment({
-            patient,
-            doctor,
+            patient: patientId,
+            doctor: doctorId,
             date,
             startTime,
             endTime,
@@ -44,7 +44,6 @@ exports.createAppointment = async (req, res) => {
         res.status(500).json({ error: 'Error creating appointment', details: error.message });
     }
 };
-
 // Get all appointments
 exports.getAllAppointments = async (req, res) => {
     try {
@@ -55,7 +54,6 @@ exports.getAllAppointments = async (req, res) => {
             query.doctor = doctorId;
         }
         if (date) {
-            // For date, we need to match the date part only, ignoring time
             const startOfDay = new Date(date);
             startOfDay.setHours(0, 0, 0, 0);
             const endOfDay = new Date(date);
@@ -67,9 +65,15 @@ exports.getAllAppointments = async (req, res) => {
         }
 
         const appointments = await Appointment.find(query)
-            .populate('patient', 'FirstName LastName PID') // Populate patient details
-            .populate('doctor', 'name specialization') // Populate doctor details
-            .sort({ date: 1, startTime: 1 }); // Sort by date and time
+            .populate({
+                path: 'patient',
+                select: 'FirstName LastName PID'
+            })
+            .populate({
+                path: 'doctor',
+                select: 'name specialization'
+            })
+            .sort({ date: 1, startTime: 1 });
 
         res.status(200).json(appointments);
     } catch (error) {
@@ -153,5 +157,27 @@ exports.updateAppointmentStatus = async (req, res) => {
         res.status(200).json(updatedAppointment);
     } catch (error) {
         res.status(500).json({ error: 'Error updating appointment status', details: error.message });
+    }
+};
+// Delete an appointment
+exports.deleteAppointment = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deletedAppointment = await Appointment.findByIdAndDelete(id);
+
+        if (!deletedAppointment) {
+            return res.status(404).json({ error: 'Appointment not found.' });
+        }
+
+        res.status(200).json({
+            message: 'Appointment deleted successfully',
+            deletedAppointment
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            error: 'Error deleting appointment', 
+            details: error.message 
+        });
     }
 };

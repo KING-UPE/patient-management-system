@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); 
 
 const appointmentSchema = new mongoose.Schema({
     patient: { 
@@ -16,12 +16,14 @@ const appointmentSchema = new mongoose.Schema({
         required: true
     },
     startTime: {
-        type: String,  // Format: "HH:MM" (e.g., "09:00")
-        required: true
+        type: String,
+        required: true,
+        match: /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/ // HH:MM format
     },
     endTime: {
-        type: String,  // Format: "HH:MM" (e.g., "09:30")
-        required: true
+        type: String,
+        required: true,
+        match: /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/ // HH:MM format
     },
     status: {
         type: String,
@@ -43,4 +45,4 @@ const appointmentSchema = new mongoose.Schema({
 // Index for preventing double bookings
 appointmentSchema.index({ doctor: 1, date: 1, startTime: 1 }, { unique: true });
 
-module.exports = mongoose.model('Appointment', appointmentSchema);  
+module.exports = mongoose.model('Appointment', appointmentSchema);
