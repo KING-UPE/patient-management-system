@@ -33,8 +33,3 @@ A web-based system for managing patient records in a teaching hospital.
 - Node.js (v16 or later)
 - MongoDB Atlas account or local MongoDB instance
 - Git
-
-### Step 1: Clone the Repository
-```bash
-git clone https://github.com/KING-UPE/patient-management-system.git
-cd patient-management-system
