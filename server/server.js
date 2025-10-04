@@ -1,15 +1,12 @@
-// server.js
-
-// 1. CONDITIONAL DOTENV LOADING
-// Load environment variables only if not in production
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
+// Load environment variables from .env
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+
+// Import routes
 const specializationRoutes = require('./routes/specializationRoutes');
 const medicationRoutes = require('./routes/medicationRoutes');
 const patientRoutes = require('./routes/patientRoutes');
@@ -18,13 +15,19 @@ const appointmentRoutes = require('./routes/appointmentRoutes');
 
 const app = express();
 
-// Middleware
+// Middleware - CORS
 app.use(cors({
-    origin: 'http://localhost:3000', // Change this in production or use process.env.CLIENT_URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: '*', // allow all origins or replace with frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
 // API Routes
 app.use('/api/patients', patientRoutes);
@@ -33,31 +36,16 @@ app.use('/api/medications', medicationRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/specializations', specializationRoutes);
 
-// Serve static files
+// Serve static frontend files
 app.use(express.static(path.join(__dirname, '../client')));
 
-// Handle SPA routing
+// SPA routing - send index.html for all other routes
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
+    res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-// 2. Database connection and Server Start
+// Start server
 const PORT = process.env.PORT || 3000;
-
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-        console.log('✅ Connected to MongoDB successfully.');
-        
-        // Start the server ONLY after a successful DB connection
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT} (Database is ready)`);
-        });
-
-    })
-  .catch(err => {
-        // This is the block that is causing the early exit.
-        console.error('❌ MongoDB connection FAILED:');
-        console.error(err.message);
-        console.error('Exiting process...');
-        process.exit(1);
-    });
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
