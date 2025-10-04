@@ -26,7 +26,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// API Routes (defined before server starts but after middleware)
+// API Routes
 app.use('/api/patients', patientRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/medications', medicationRoutes);
@@ -55,7 +55,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
     })
   .catch(err => {
-        // Log error and exit the process if connection fails
+        // This is the block that is causing the early exit.
         console.error('❌ MongoDB connection FAILED:');
         console.error(err.message);
         console.error('Exiting process...');
