@@ -1,0 +1,17 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Environment variables
+.env
+
+# Build outputs
+build
+dist
+.next
+.nuxt
+
+# OS and Editor files
+.git
+.gitignore
+.DS_Store
