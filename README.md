@@ -3,7 +3,7 @@
 A web-based system for managing patient records in a teaching hospital.
 
 ## 🌐 Live Demo
-[Access the live application](https://patient-management-system-production.up.railway.app/)
+[Access the live application](https://patient-management-system-production.up.railway.app/](https://patient-management-system-by-upendra-dasanayaka.vercel.app/)
 
 ## ✨ Features
 - **Patient Management**:
